@@ -1,7 +1,8 @@
 # First, reads download
 
-''
-# Data ID
+
+
+```
 IW="SRR14424469"
 PW="SRR14424468"
 
@@ -13,4 +14,4 @@ fasterq-dump $IW.sra
 
 prefetch -O $woriking_dir/IW -t $IW
 fasterq-dump $PW.sra
-''
+```
