@@ -14,7 +14,8 @@ fasterq-dump -s -e 20 -O $woriking_dir/ -o PW $woriking_dir/$PW/*.sra
 
 ```
 # Second, quality check with fastp
+```
 cd $woriking_dir/IW/
 mkdir -p fastp
 fastp -i IW_1.fastq -o fastp/IW_1_qc.fastq -I IW_2.fastq -O fastp/IW_2_qc.fastq -w 20 -h report.html
-
+```
