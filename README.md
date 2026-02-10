@@ -3,7 +3,7 @@
 IW="SRR14424469"
 PW="SRR14424468"
 
-woriking_dir="home"
+woriking_dir="home" #Any other dir could be used
 mkdir -p IW
 mkdir -p PW
 prefetch -O $woriking_dir/IW/ $IW
@@ -40,6 +40,9 @@ cat fastp/IW_2_qc.fastq fastp/PW_2_qc.fastq > Assembly/Merge_2_Reads.fastq
 ```
 Spades assembly 
 ```
-spades --meta 
+spades --meta -1 Assembly/Merge_1_Reads.fastq -2 Assembly/Merge_2_Reads.fastq -o Assembly/ -t 30
 ```
-
+Prokka gene prediction
+```
+prokka --meta 
+```
