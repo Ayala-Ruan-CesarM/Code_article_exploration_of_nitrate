@@ -29,8 +29,10 @@ kraken2 --db "$DB" --threads --output PW_taxonomy.txt --report PW_taxonomy.repor
 ```
 Now, read correction with bracken
 ```
-bracken -d $DB" -i PW_taxonomy.report -o PW_taxonomy.brack -w PW_taxonomy.brack.report -r 150 -l G
+bracken -d $DB" -i PW_taxonomy.report -o PW_taxonomy.bracken -w PW_taxonomy.bracken.report -r 150 -l G
 ```
+The "PW_taxonomy.bracken" file will be use latter.
+
 # Fourth: De-novo assembly and gene predciton 
 ## Reads merged 
 ```
@@ -49,7 +51,7 @@ Here we use --prefix to have all output files with the same basename and the sam
 ```
  metaprokka --outdir Prokka_annotation/ --force --prefix OILFIELD --locustag OF --mincontiglen 200 --compliant --cpus 30 Emsamble/contigs.fasta
 ```
-# Fifth: gene extractions, taxonomical annotation and tables generation
+# Fifth: gene extractions
 On this step we're going to extract the genes related to Nitrate reduction and Sulfate reduction from all metagenome predicted genes
 To do so for loop would be used:
 ```
@@ -76,7 +78,7 @@ for file in "${list[@]}"; do
     grep -f $file OILFIELD.ffn > "$basename"_genes.fasta
 done
 ```
-
+# Sixth, taxonomical annotation 
 Then we're going to do the taxonomical assignment to each gene using kraken2
 Two separete bash cycles are used to keep results separeted.
 
@@ -100,14 +102,8 @@ for file in "${list2[@]}"; do
     --output $outdir_sulfate/"$base"_output.txt --report "$base"_report.txt \
     --unclassified-out $outdir_sulfate/"$base"_unclassifed.txt --use-names $file
 ```
-
+# Seventh, data tables generation and quality check
 Then, we're going to format the output results into a tabular format. 
-Each file output here would have the follwing format:
-
-Taxa | gene
-TaxaX | 1
-TaxaY | 5
-TazaZ | 3
 
 ```
 echo "Nitrate table preparation"
@@ -131,12 +127,26 @@ done
 
 Lastly, we're going to merge all file into two singular dataframes, one for each metabolic pathway.
 To do so, it is only requiered to have all "$basename"_per_specie.txt files on same director and run the python script provided
+Additionally, an automatic filtering step is introduce here within the same python script.
+The reason behiend it is that we need to make sure that all genes are coming from taxa present only on the producton water (PW)
+That's why on step third step the PW_taxonomy.bracken was created.
 
 ```
-python merge_df.py
+python merge_filter.py
 ```
+There are fout files generated as output from this script: 
+"Sulfate_locus_per_taxa.txt"
+"Nitrate_locus_per_taxa.txt"
+"Nitrate_locus_filtered.txt" 
+"Sulfate_locus_filtered.txt"
 
+However, the "Nitrate_locus_filtered.txt" it is not correct to use it as the script only trys to compare gene annotations at 
+the gene level and in the "Nitrate_locus_filtered.txt" file there are genes that couldn't be annotated at gene level.
+So, instead one have to manually compare  the "Nitrate_locus_per_taxa.txt" file against the "PW_taxonomy.bracen" and remove
+all the rows that are not presented on "PW_taxonomy.bracen" file. 
+To that last filterd file we recommend call it "Nitrate_locus_per_taxa_filtered_manual.txt" so that plot generation script does not break.
 
+# Eight, Gene presence plot 
 
 
 
