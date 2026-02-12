@@ -104,10 +104,10 @@ for file in "${list2[@]}"; do
 Lastly, we're going to format the output results into a tabular format. 
 Each file output here would have the follwing format:
 
-Taxa	gene
-TaxaX  1
-TaxaY  5
-TazaZ  3
+Taxa\tgene
+TaxaX\t1
+TaxaY\t5
+TazaZ"\t"3
 
 ```
 echo "Nitrate table preparation"
