@@ -101,13 +101,13 @@ for file in "${list2[@]}"; do
     --unclassified-out $outdir_sulfate/"$base"_unclassifed.txt --use-names $file
 ```
 
-Lastly, we're going to format the output results into a tabular format. 
+Then, we're going to format the output results into a tabular format. 
 Each file output here would have the follwing format:
 
-Taxa\tgene
-TaxaX\t1
-TaxaY\t5
-TazaZ"\t"3
+Taxa | gene
+TaxaX | 1
+TaxaY | 5
+TazaZ | 3
 
 ```
 echo "Nitrate table preparation"
@@ -128,3 +128,15 @@ for file in "${lis3[@]}"; do
     (echo -e "Taxa\t$basename" && cat "$basename"_per_specie.txt) > tmp ; mv tmp "$basename"_per_specie.txt
 done
 ```
+
+Lastly, we're going to merge all file into two singular dataframes, one for each metabolic pathway.
+To do so, it is only requiered to have all "$basename"_per_specie.txt files on same director and run the python script provided
+
+```
+python merge_df.py
+```
+
+
+
+
+
