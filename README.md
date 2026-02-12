@@ -147,6 +147,9 @@ all the rows that are not presented on "PW_taxonomy.bracen" file.
 To that last filterd file we recommend call it "Nitrate_locus_per_taxa_filtered_manual.txt" so that plot generation script does not break.
 
 # Eight, Gene presence plot 
-
-
+"Nitrate_locus_per_taxa_filtered_manual.txt" and "Sulfate_locus_filtered.txt" have to be on same folder to plot the results
+used as figure 4 on the article. 
+```
+python gene_presence_plot.py
+```
 
