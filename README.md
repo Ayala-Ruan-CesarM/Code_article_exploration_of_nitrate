@@ -32,6 +32,7 @@ Now, read correction with bracken
 bracken -d $DB" -i PW_taxonomy.report -o PW_taxonomy.bracken -w PW_taxonomy.bracken.report -r 150 -l G
 ```
 The "PW_taxonomy.bracken" file will be use latter.
+This same step should be applied to IW fastq reads in order to obtained the file "IW_taxonomy.bracke" that would be use latter
 
 # Fourth: De-novo assembly and gene predciton 
 ## Reads merged 
@@ -78,7 +79,7 @@ for file in "${list[@]}"; do
     grep -f $file OILFIELD.ffn > "$basename"_genes.fasta
 done
 ```
-# Sixth, taxonomical annotation 
+# Sixth: taxonomical annotation 
 Then we're going to do the taxonomical assignment to each gene using kraken2
 Two separete bash cycles are used to keep results separeted.
 
@@ -102,7 +103,7 @@ for file in "${list2[@]}"; do
     --output $outdir_sulfate/"$base"_output.txt --report "$base"_report.txt \
     --unclassified-out $outdir_sulfate/"$base"_unclassifed.txt --use-names $file
 ```
-# Seventh, data tables generation and quality check
+# Seventh: data tables generation and quality check
 Then, we're going to format the output results into a tabular format. 
 
 ```
@@ -146,10 +147,82 @@ So, instead one have to manually compare  the "Nitrate_locus_per_taxa.txt" file 
 all the rows that are not presented on "PW_taxonomy.bracen" file. 
 To that last filterd file we recommend call it "Nitrate_locus_per_taxa_filtered_manual.txt" so that plot generation script does not break.
 
-# Eight, Gene presence plot 
+# Eight: Gene presence plot 
 "Nitrate_locus_per_taxa_filtered_manual.txt" and "Sulfate_locus_filtered.txt" have to be on same folder to plot the results
 used as figure 4 on the article. 
 ```
 python gene_presence_plot.py
 ```
+# Tenth: Swarm plot
+In order to recreate the Figure 1. presented on the manuscript that displays the results from the Posgate C medium
+we have to execute the following:
+
+```
+python swarmplot.py
+```
+
+The previous script already have the results obtained and the treatments assgined.
+# Eleventh: Microbial Network construction
+We're going to use the output generated from bracken at third step (PW_taxonomy.bracken and IW_taxonomy.bracken)
+They must to be place on the same directory
+## mOTU table generation
+The output from this script is a tab separeted table.
+```
+python bracken_to_mOTU.py -i PW_taxonomy.bracken and IW_taxonomy.bracken -o PWIW_G_mOTU.tsv
+```
+## Samples simulation and distribution selection
+With the following script we have the ability to simulate technical replicates for microbial samples, filter low-abundance OTUs, 
+and perform PCA, PCoA (Bray-Curtis), and UMAP analysis.
+The option that were used on this work are:
+```
+python replicates_simulation.py -h 
+  --input INPUT         Path to the input TSV mOTU table file (e.g., PWIW_motu.tsv).
+  --output_simulated_data OUTPUT_SIMULATED_DATA
+                        Path to save the new mOTU table with simulated replicates.
+  --num_replicates NUM_REPLICATES
+                        Number of technical replicates to generate per sample (default: 3).
+  --distribution {normal,poisson,negative_binomial}
+                        Statistical distribution for generating variation ('normal', 'poisson', 'negative_binomial'). Default: 'normal'.
+  --variation_factor VARIATION_FACTOR
+                        Degree of variation parameter (float): - 'normal': Standard deviation (e.g., 0.1 for ~10% variation). - 'poisson': Not
+                        applicable (variance tied to mean). - 'negative_binomial': Dispersion parameter (alpha), higher value means more
+                        dispersion. Default: 0.1.
+  --random_seed RANDOM_SEED
+                        Random seed for reproducibility (default: 42).
+```
+The script was ran once for each distribution ('normal', 'poisson', 'negative_binomial') with --num_replicates 200, --variation_factor 0.05 and --random_seed 57.
+
+For example: 
+
+```
+python replicates_simulation.py --input PWIW_G_mOTU.tsv \
+ --output PWIW_simulated_neg_binom_05_rsed57_n200.tsv \
+ --distribution negative_binomial --num_replicates 200 \
+ --variation_factor 0.05 --random_seed 57
+```
+
+The output file generated "PWIW_simulated_neg_binom_05_rsed57_n200.tsv" is going to be use for the network generation
+
+## Network construction
+THe output from previous simulation will be used for the network generation.
+The following R packages are requiered to be installed:
+tidyverse (Wickham et al. (2019)),  NetCoMi (Peschel et al. (2020)), igraph (Antonov M et al. (2023)) and phyloseq (McMurdie PJ & Holmes S. (2013))
+
+Make sure that change the path accordingly on the script:
+```
+file_paths <- list.files(path = "Simulations_genera_level/", #It also can be full path
+                         pattern = "PWIW_simulated_neg_binom_05_rsed57_n200.tsv", # name of the
+                         full.names = TRUE)
+```
+Execution:
+```
+Rscript microbial_network.R
+```
+Althought a graphical interface instead of terminal is recommended
+
+# References
+Wickham et al., (2019). Welcome to the Tidyverse. Journal of Open Source Software, 4(43), 1686, https://doi.org/10.21105/joss.01686
+Peschel, S., Müller, C. L., Von Mutius, E., Boulesteix, A., & Depner, M. (2020). NetCoMi: network construction and comparison for microbiome data in R. Briefings in Bioinformatics, 22(4). https://doi.org/10.1093/bib/bbaa290
+Antonov M, Csárdi G, Horvát S, Müller K, Nepusz T, Noom D, Salmon M, Traag V, Welles BF, Zanini F (2023). “igraph enables fast and robust network analysis across programming languages.” arXiv preprint arXiv:2311.10260. doi:10.48550/arXiv.2311.10260.
+McMurdie PJ, Holmes S (2013) phyloseq: An R Package for Reproducible Interactive Analysis and Graphics of Microbiome Census Data. PLoS ONE 8(4): e61217. https://doi.org/10.1371/journal.pone.0061217
 
