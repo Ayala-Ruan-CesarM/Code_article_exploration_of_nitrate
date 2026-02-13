@@ -153,7 +153,7 @@ used as figure 4 on the article.
 ```
 python gene_presence_plot.py
 ```
-# Tenth: Swarm plot
+# Nineth: Swarm plot
 In order to recreate the Figure 1. presented on the manuscript that displays the results from the Posgate C medium
 we have to execute the following:
 
@@ -162,7 +162,7 @@ python swarmplot.py
 ```
 
 The previous script already have the results obtained and the treatments assgined.
-# Eleventh: Microbial Network construction
+# Tenth: Microbial Network construction
 We're going to use the output generated from bracken at third step (PW_taxonomy.bracken and IW_taxonomy.bracken)
 They must to be place on the same directory
 ## mOTU table generation
@@ -225,4 +225,11 @@ Wickham et al., (2019). Welcome to the Tidyverse. Journal of Open Source Softwar
 Peschel, S., Müller, C. L., Von Mutius, E., Boulesteix, A., & Depner, M. (2020). NetCoMi: network construction and comparison for microbiome data in R. Briefings in Bioinformatics, 22(4). https://doi.org/10.1093/bib/bbaa290
 Antonov M, Csárdi G, Horvát S, Müller K, Nepusz T, Noom D, Salmon M, Traag V, Welles BF, Zanini F (2023). “igraph enables fast and robust network analysis across programming languages.” arXiv preprint arXiv:2311.10260. doi:10.48550/arXiv.2311.10260.
 McMurdie PJ, Holmes S (2013) phyloseq: An R Package for Reproducible Interactive Analysis and Graphics of Microbiome Census Data. PLoS ONE 8(4): e61217. https://doi.org/10.1371/journal.pone.0061217
+Seemann, T. (2014). Prokka: rapid prokaryotic genome annotation. Bioinformatics, 30(14), 2068–2069. https://doi.org/10.1093/bioinformatics/btu153
+Nurk, S., Meleshko, D., Korobeynikov, A., & Pevzner, P. A. (2017). metaSPAdes: a new versatile metagenomic assembler. Genome Research, 27(5), 824–834. https://doi.org/10.1101/gr.213959.116
+Wood, D. E., Lu, J., & Langmead, B. (2019). Improved metagenomic analysis with Kraken 2. Genome Biology, 20(1), 257. https://doi.org/10.1186/s13059-019-1891-0
+Lu, J., Breitwieser, F. P., Thielen, P., & Salzberg, S. L. (2017). Bracken: estimating species abundance in metagenomics data. PeerJ Computer Science, 3, e104. https://doi.org/10.7717/peerj-cs.104
+Leinonen, R., Sugawara, H., & Shumway, M. (2010). The sequence read archive. Nucleic Acids Research, 39(Database), D19–D21. https://doi.org/10.1093/nar/gkq1019
+
+
 
